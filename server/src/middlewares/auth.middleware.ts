@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
+import { AppError } from "../utils/AppError";
 
 export const authMiddleware = (
   req: Request,
@@ -7,13 +8,15 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
+  if (!token) {
+    throw new AppError("Unauthorize", 401);
+  }
 
   try {
     const decoded = verifyToken(token);
     req.user = decoded;
     next();
   } catch {
-    res.status(401).json({ message: "Invalid token" });
+    throw new AppError("Invalid token", 401);
   }
 };
