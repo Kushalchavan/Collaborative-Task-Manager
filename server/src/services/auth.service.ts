@@ -21,7 +21,7 @@ export const registerService = async (
     password: hashed,
   });
 
-  return signToken({ userId: user.id });
+  return signToken({ id: user.id });
 };
 
 export const loginService = async (email: string, password: string) => {
@@ -35,5 +35,5 @@ export const loginService = async (email: string, password: string) => {
     throw new AppError("Invlaid credentials", 401);
   }
 
-  return signToken({ userId: user.id });
+  return signToken({ id: user.id });
 };

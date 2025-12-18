@@ -14,6 +14,10 @@ export const authMiddleware = (
 
   try {
     const decoded = verifyToken(token) as { id: string };
+    if (!decoded.id) {
+      throw new AppError("Invalid token payload", 401);
+    }
+
     req.user = { id: decoded.id };
     next();
   } catch {
