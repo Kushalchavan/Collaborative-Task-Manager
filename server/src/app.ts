@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import authRoute from "./routes/auth.route";
 import { errorHandler } from "./middlewares/error.middleware";
+import authRoute from "./routes/auth.route";
+import taskRoute from "./routes/task.route";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/task", taskRoute);
 
 // Global Erro handler
 app.use(errorHandler);

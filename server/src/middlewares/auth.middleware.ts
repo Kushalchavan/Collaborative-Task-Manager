@@ -13,8 +13,8 @@ export const authMiddleware = (
   }
 
   try {
-    const decoded = verifyToken(token);
-    req.user = decoded;
+    const decoded = verifyToken(token) as { id: string };
+    req.user = { id: decoded.id };
     next();
   } catch {
     throw new AppError("Invalid token", 401);
