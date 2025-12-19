@@ -18,3 +18,14 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.cookie("token", token, { httpOnly: true });
   res.status(200).json({ message: "User LoggedIn successfully" });
 });
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  res.status(200).json({
+    user: req.user,
+  });
+});
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "User loggedo out successfully" });
+});
