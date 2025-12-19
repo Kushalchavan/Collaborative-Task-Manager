@@ -1,6 +1,14 @@
 const Login = () => {
   return (
-    <div>Login</div>
+    <div className="w-screen h-screen flex">
+      <div className="bg-black">
+
+      </div>
+
+      <div>
+          
+      </div>
+    </div>
   )
 }
 export default Login
