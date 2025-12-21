@@ -7,7 +7,11 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const body = registerSchema.parse(req.body);
   const token = await registerService(body.name, body.email, body.password);
 
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
   res.status(201).json({ message: "User Registered successfully" });
 });
 
@@ -15,7 +19,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const body = loginSchema.parse(req.body);
   const token = await loginService(body.email, body.password);
 
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
   res.status(200).json({ message: "User LoggedIn successfully" });
 });
 
@@ -26,6 +34,10 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  res.clearCookie("token");
-  res.status(200).json({ message: "User loggedo out successfully" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
+  res.status(200).json({ message: "User logged out successfully" });
 });

@@ -9,8 +9,13 @@ import taskRoute from "./routes/task.route";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRoute);
