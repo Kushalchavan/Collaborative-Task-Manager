@@ -23,7 +23,7 @@ export function SignupForm({
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
-  });
+  })
 
   const onSubmit = (data: RegisterInput) => {
     mutate(data, {
