@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
 import { AppError } from "../utils/AppError";
+import { prisma } from "../config/prisma";
 
-export const authMiddleware = (
+export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,7 +19,19 @@ export const authMiddleware = (
       throw new AppError("Invalid token payload", 401);
     }
 
-    req.user = { id: decoded.id };
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+    if (!user) {
+      throw new AppError("User not found", 401);
+    }
+
+    req.user = user;
     next();
   } catch {
     throw new AppError("Invalid token", 401);
