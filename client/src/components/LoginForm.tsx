@@ -7,7 +7,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/auth/useAuth";
+import { useLogin } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@/schemas/auth.schema";

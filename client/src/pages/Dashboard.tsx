@@ -1,12 +1,10 @@
+import CreateTaskModal from "@/components/Dashboard/modals/CreateTaskModal";
 import { TaskCard } from "@/components/Dashboard/TaskCard";
-import { Button } from "@/components/ui/button";
-import { useGetUser } from "@/hooks/auth/useAuth";
+import { useGetUser } from "@/hooks/useAuth";
 import DashboardLayout from "@/layout/DashboardLayout";
-import { Plus } from "lucide-react";
 
 const Dashboard = () => {
   const { data } = useGetUser();
-  console.log(data);
 
   return (
     <DashboardLayout>
@@ -18,9 +16,7 @@ const Dashboard = () => {
           </span>
         </div>
 
-        <Button>
-          <Plus /> Create Task
-        </Button>
+        <CreateTaskModal />
       </div>
 
       <div className="w-full grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-7">

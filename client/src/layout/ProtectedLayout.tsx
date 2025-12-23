@@ -1,5 +1,5 @@
 import { Spinner } from "@/components/ui/spinner";
-import { useGetUser } from "../hooks/auth/useAuth";
+import { useGetUser } from "../hooks/useAuth";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const { isLoading } = useGetUser();
