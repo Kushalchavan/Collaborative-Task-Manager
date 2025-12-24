@@ -1,5 +1,6 @@
 import CreateTaskModal from "@/components/Dashboard/modals/CreateTaskModal";
 import { TaskCard } from "@/components/Dashboard/TaskCard";
+import TaskList from "@/components/Dashboard/TaskList";
 import { useGetUser } from "@/hooks/useAuth";
 import DashboardLayout from "@/layout/DashboardLayout";
 
@@ -24,6 +25,12 @@ const Dashboard = () => {
         <TaskCard />
         <TaskCard />
         <TaskCard />
+      </div>
+
+      <div className="mt-8">
+        <h5 className="text-sm mb-3">Task list</h5>
+
+        <TaskList/>
       </div>
     </DashboardLayout>
   );

@@ -4,6 +4,7 @@ import Register from "./pages/auth/Register";
 import ProtectedLayout from "./layout/ProtectedLayout";
 import Dashboard from "./pages/Dashboard";
 import { ThemeProvider } from "./components/theme-provider";
+import MyTasks from "./pages/MyTasks";
 
 const App = () => {
   return (
@@ -21,6 +22,10 @@ const App = () => {
               </ProtectedLayout>
             }
           />
+
+          <Route path="/my-tasks" element={<ProtectedLayout>
+            <MyTasks/>
+          </ProtectedLayout>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

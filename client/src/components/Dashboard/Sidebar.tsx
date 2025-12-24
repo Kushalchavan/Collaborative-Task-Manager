@@ -14,7 +14,7 @@ import { Badge } from "../ui/badge";
 
 export default function AppSidebar() {
   return (
-    <aside className="w-64 h-screen border-r bg-background px-4 py-4">
+    <aside className="w-64 h-screen border-r bg-background px-4 py-4 fixed left-0 top-0">
       {/* Logo */}
       <div className="flex items-center gap-2 font-medium">
         <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">

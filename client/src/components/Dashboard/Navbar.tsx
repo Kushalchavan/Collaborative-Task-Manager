@@ -21,7 +21,8 @@ export default function DashboardNavbar() {
   }, [theme, setTheme, startTransition]);
 
   return (
-    <header className="h-16 w-full border-b bg-background px-6 flex items-center justify-between">
+
+    <header className="h-16 border-b bg-background px-6 flex items-center justify-between fixed left-64 right-0">
       {/* Left */}
       <div className="flex items-center gap-6">
         {/* Navigation */}
