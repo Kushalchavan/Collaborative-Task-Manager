@@ -52,15 +52,10 @@ export const useDeleteTask = () => {
   });
 };
 
-export const useGetTaskById = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => getTaskById(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
+export const useGetTaskById = (id: string) => {
+  return useQuery({
+    queryKey: ["tasks", id],
+    queryFn: () => getTaskById(id),
+    enabled: !!id,
   });
 };

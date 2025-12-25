@@ -7,12 +7,20 @@ import {
 } from "../ui/theme-toggle-button";
 import { useTheme } from "../theme-provider";
 import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const navItems = ["Dashboard", "My Tasks", "Team", "Settings"];
+const navItems = [
+  { label: "Dashboard", path: "/dashboard" },
+  { label: "My Tasks", path: "/my-tasks" },
+  { label: "Team", path: "/team" },
+  { label: "Settings", path: "/settings" },
+];
 
 export default function DashboardNavbar() {
   const { theme, setTheme } = useTheme();
   const { startTransition } = useThemeTransition();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleThemeToggle = useCallback(() => {
     startTransition(() => {
@@ -23,24 +31,26 @@ export default function DashboardNavbar() {
   return (
 
     <header className="h-16 border-b bg-background px-6 flex items-center justify-between fixed left-64 right-0">
-      {/* Left */}
       <div className="flex items-center gap-6">
-        {/* Navigation */}
+        {/* Left */}
         <nav className="hidden md:flex items-center gap-2">
-          {navItems.map((item) => (
-            <Button
-              key={item}
-              variant={item === "Dashboard" ? "secondary" : "ghost"}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+
+            return <Button
+              key={item.label}
+              variant={isActive ? "secondary" : "ghost"}
               size="sm"
               className="text-sm"
+              onClick={() => navigate(item.path)}
             >
-              {item}
+              {item.label}
             </Button>
-          ))}
+          })}
         </nav>
       </div>
 
-      {/* Right */}
+      {/* Right side */}
       <div className="flex items-center gap-4">
         <ThemeToggleButton
           theme={theme === "dark" ? "dark" : "light"}

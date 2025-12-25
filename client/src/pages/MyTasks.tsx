@@ -14,7 +14,7 @@ const MyTasks = () => {
         <div className="flex-1 space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold flex items-center gap-2">
+              <h1 className="text-xl font-semibold flex items-center gap-2">
                 My Tasks
               </h1>
 
@@ -29,7 +29,7 @@ const MyTasks = () => {
 
             <div className="flex items-center gap-3">
               <Badge variant="outline" className="gap-1">
-                🟢 Live updates
+                <span className="size-3 bg-green-400 rounded-full mr-1 animate-pulse"/> Live updates
               </Badge>
               <Button>+ Add Task</Button>
             </div>

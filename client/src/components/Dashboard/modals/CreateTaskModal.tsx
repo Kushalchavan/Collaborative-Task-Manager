@@ -25,14 +25,45 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, Plus } from "lucide-react";
 import { format } from "date-fns";
+import { useCreateTask } from "@/hooks/useTask";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CreateTaskModal() {
   const [date, setDate] = useState<Date>();
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    status: "todo",
+    priority: "medium",
+  });
+  const { mutate: createTask, isPending } = useCreateTask();
+
+  const handleCreate = () => {
+    createTask(
+      {
+        ...form,
+        dueDate: date,
+      },
+      {
+        onSuccess: () => {
+          setForm({
+            title: "",
+            description: "",
+            status: "todo",
+            priority: "medium",
+          });
+          setDate(undefined);
+        },
+      }
+    );
+  };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button><Plus/> Create Task</Button>
+        <Button>
+          <Plus /> Create Task
+        </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl">
@@ -133,7 +164,9 @@ export default function CreateTaskModal() {
         {/* Footer */}
         <div className="flex justify-end gap-2 pt-6">
           <Button variant="ghost">Cancel</Button>
-          <Button>Create Task</Button>
+          <Button onClick={handleCreate} disabled={isPending}>
+            {isPending ? <Spinner className="size-4" /> : "Create Task"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

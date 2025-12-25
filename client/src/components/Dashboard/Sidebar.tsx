@@ -1,18 +1,22 @@
 import {
   LayoutGrid,
   CheckCircle,
-  Inbox,
   Calendar,
   Clock,
   Flag,
   Plus,
   SquareCheckBig,
+  Users,
+  Settings,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { Badge } from "../ui/badge";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AppSidebar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <aside className="w-64 h-screen border-r bg-background px-4 py-4 fixed left-0 top-0">
       {/* Logo */}
@@ -26,14 +30,44 @@ export default function AppSidebar() {
       <Separator className="my-5" />
 
       <nav className="space-y-1">
-        <SidebarItem icon={LayoutGrid} label="Dashboard" active />
-        <SidebarItem icon={CheckCircle} label="My Tasks" count={12} />
-        <SidebarItem icon={Inbox} label="Inbox" count={5} />
+        <SidebarItem
+          icon={LayoutGrid}
+          label="Dashboard"
+          path="/dashboard"
+          active={location.pathname === "/dashboard"}
+          onClick={() => navigate("/dashboard")}
+        />
+
+        <SidebarItem
+          icon={CheckCircle}
+          label="My Tasks"
+          active={location.pathname === "/my-tasks"}
+          path="/my-tasks"
+          onClick={() => navigate("/my-tasks")}
+        />
+
+        <SidebarItem
+          icon={Users}
+          label="Team"
+          path="/team"
+          active={location.pathname === "/team"}
+          onClick={() => navigate("/team")}
+        />
+
+        <SidebarItem
+          icon={Settings}
+          label="Settings"
+          path="/settings"
+          active={location.pathname === "/settings"}
+          onClick={() => navigate("/settings")}
+        />
       </nav>
 
       <Separator className="my-4" />
 
-      <SectionTitle title="Filters" />
+      <p className="text-xs font-semibold uppercase text-muted-foreground px-2">
+        Filters
+      </p>
       <nav className="space-y-1 mt-3">
         <SidebarItem icon={Calendar} label="Today" />
         <SidebarItem icon={Clock} label="Upcoming" />
@@ -44,7 +78,9 @@ export default function AppSidebar() {
 
       {/* Projects */}
       <div className="flex items-center justify-between mb-2">
-        <SectionTitle title="Projects" />
+        <p className="text-xs font-semibold uppercase text-muted-foreground px-2">
+          Projects
+        </p>
         <Button variant="ghost" size="icon">
           <Plus className="h-4 w-4" />
         </Button>
@@ -63,13 +99,15 @@ export default function AppSidebar() {
 type SidebarItemProps = {
   icon: React.ElementType;
   label: string;
-  count?: number;
+  path?: string;
   active?: boolean;
+  onClick?: () => void;
 };
 
-function SidebarItem({ icon: Icon, label, count, active }: SidebarItemProps) {
+function SidebarItem({ icon: Icon, label, active, onClick }: SidebarItemProps) {
   return (
     <button
+      onClick={onClick}
       className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition
         ${
           active
@@ -82,17 +120,7 @@ function SidebarItem({ icon: Icon, label, count, active }: SidebarItemProps) {
         <Icon className="h-4 w-4" />
         {label}
       </div>
-
-      {count !== undefined && <Badge variant="secondary">{count}</Badge>}
     </button>
-  );
-}
-
-function SectionTitle({ title }: { title: string }) {
-  return (
-    <p className="text-xs font-semibold uppercase text-muted-foreground px-2">
-      {title}
-    </p>
   );
 }
 
