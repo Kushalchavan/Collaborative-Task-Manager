@@ -23,38 +23,53 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Plus } from "lucide-react";
+import { CalendarIcon, PenBoxIcon } from "lucide-react";
 import { format } from "date-fns";
-import { Spinner } from "@/components/ui/spinner";
 import { Controller, useForm } from "react-hook-form";
+import { updateTaskSchema, type UpdateTaskInput } from "@/schemas/task.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTaskSchema, type CreateTaskInput } from "@/schemas/task.schema";
-import { useCreateTask } from "@/hooks/useTask";
+import { useUpdateTask } from "@/hooks/useTask";
+import DeleteTaskModal from "./DeleteTaskModal";
 
-export default function CreateTaskModal() {
-  const [date, setDate] = useState<Date>();
+type UpdateTaskModalProps = {
+  task: {
+    id: string;
+    title: string;
+    description?: string;
+    status: "todo" | "in-progress" | "done";
+    priority: "low" | "medium" | "high";
+    dueDate?: string;
+  };
+};
+
+export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const { mutate, isPending } = useCreateTask();
-  const { register, handleSubmit, control, reset } = useForm<CreateTaskInput>({
-    resolver: zodResolver(createTaskSchema),
+  const [date, setDate] = useState<Date | undefined>(
+    task.dueDate ? new Date(task.dueDate) : undefined
+  );
+  const { register, handleSubmit, control, reset } = useForm<UpdateTaskInput>({
+    resolver: zodResolver(updateTaskSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      status: "todo",
-      priority: "medium",
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
     },
   });
+  const { mutate: updateTask, isPending } = useUpdateTask();
 
-  const onSubmit = (data: CreateTaskInput) => {
-    mutate(
+  const onSubmit = (data: UpdateTaskInput) => {
+    updateTask(
       {
-        ...data,
-        dueDate: date?.toISOString(),
+        id: task.id,
+        data: {
+          ...data,
+          dueDate: date?.toISOString(),
+        },
       },
       {
         onSuccess: () => {
           reset();
-          setDate(undefined);
         },
       }
     );
@@ -63,14 +78,12 @@ export default function CreateTaskModal() {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus /> Create Task
-        </Button>
+        <PenBoxIcon className=" size-4 cursor-pointer" />
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle>Edit Task</DialogTitle>
         </DialogHeader>
 
         {/* Form */}
@@ -93,7 +106,7 @@ export default function CreateTaskModal() {
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Status" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todo">Todo</SelectItem>
@@ -148,7 +161,9 @@ export default function CreateTaskModal() {
                   className="justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PP") : "Select date"}
+                  {date && !isNaN(date.getTime())
+                    ? format(date, "PP")
+                    : "Select date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="p-0">
@@ -162,13 +177,14 @@ export default function CreateTaskModal() {
             </Popover>
 
             {/* Priority */}
+
             <Controller
               name="priority"
               control={control}
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Priority" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low">Low</SelectItem>
@@ -179,13 +195,26 @@ export default function CreateTaskModal() {
               )}
             />
           </div>
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="w-28" type="submit" disabled={isPending}>
-              {isPending ? <Spinner className="size-4" /> : "Create Task"}
-            </Button>
+          <div className="flex justify-between pt-4">
+            <div>
+              <DeleteTaskModal
+                taskId={task.id}
+                onDeleted={() => setOpen(false)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+
+              <Button className="w-28" type="submit" disabled={isPending}>
+                Save Changes
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>

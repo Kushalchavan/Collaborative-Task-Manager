@@ -28,7 +28,7 @@ const Dashboard = () => {
       </div>
 
       <div className="mt-8">
-        <h5 className="text-sm mb-3">Task list</h5>
+        <h5 className="text-sm mb-3">Recent Tasks</h5>
 
         <TaskList/>
       </div>

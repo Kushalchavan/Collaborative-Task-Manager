@@ -2,66 +2,79 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "lucide-react";
+import { useGetTask } from "@/hooks/useTask";
+import { format } from "date-fns";
+import UpdateTaskModal from "./modals/UpdateTaskModal";
+
 
 type Task = {
   id: string;
   title: string;
-  project: string;
+  descripion?: string;
+  status: "todo" | "in-progress" | "done";
   priority: "high" | "medium" | "low";
-  due: string;
-  active?: boolean;
+  dueDate?: string;
+  project?: string;
 };
 
-const tasks: Task[] = [
-  {
-    id: "1",
-    title: "Update landing page copy for Q4 campaign",
-    project: "Website Redesign",
-    priority: "high",
-    due: "Today",
-    active: true,
-  },
-  {
-    id: "2",
-    title: "Design new authentication flow",
-    project: "Website Redesign",
-    priority: "medium",
-    due: "Tomorrow",
-  },
-  {
-    id: "3",
-    title: "Fix navigation bug on mobile",
-    project: "Mobile App",
-    priority: "high",
-    due: "Overdue",
-  },
-  {
-    id: "4",
-    title: "Prepare monthly investor report",
-    project: "Internal Tools",
-    priority: "medium",
-    due: "Nov 24",
-  },
-  {
-    id: "5",
-    title: "Review competitor analysis",
-    project: "Q4 Marketing",
-    priority: "low",
-    due: "Nov 28",
-  },
-];
+// const tasks: Task[] = [
+//   {
+//     id: "1",
+//     title: "Update landing page copy for Q4 campaign",
+//     project: "Website Redesign",
+//     priority: "high",
+//     due: "Today",
+//     active: true,
+//   },
+//   {
+//     id: "2",
+//     title: "Design new authentication flow",
+//     project: "Website Redesign",
+//     priority: "medium",
+//     due: "Tomorrow",
+//   },
+//   {
+//     id: "3",
+//     title: "Fix navigation bug on mobile",
+//     project: "Mobile App",
+//     priority: "high",
+//     due: "Overdue",
+//   },
+//   {
+//     id: "4",
+//     title: "Prepare monthly investor report",
+//     project: "Internal Tools",
+//     priority: "medium",
+//     due: "Nov 24",
+//   },
+//   {
+//     id: "5",
+//     title: "Review competitor analysis",
+//     project: "Q4 Marketing",
+//     priority: "low",
+//     due: "Nov 28",
+//   },
+// ];
 
 export default function TaskList() {
+  const { data } = useGetTask();
+
+  if (!data || data.data.length === 0) {
+    return (
+      <div className="p-4 text-center text-sm text-muted-foreground">
+        No Tasks yet
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl border bg-background">
-      {tasks.map((task) => (
+      {data.data.map((task: Task) => (
         <TaskRow key={task.id} task={task} />
       ))}
     </div>
   );
 }
-
-/* ---------------- Row ---------------- */
 
 function TaskRow({ task }: { task: Task }) {
   return (
@@ -74,9 +87,7 @@ function TaskRow({ task }: { task: Task }) {
 
         <div>
           <p className="text-sm font-medium">{task.title}</p>
-          <p className="text-xs text-muted-foreground">
-            {task.project}
-          </p>
+          <p className="text-xs text-muted-foreground">{task.project}</p>
         </div>
       </div>
 
@@ -86,7 +97,7 @@ function TaskRow({ task }: { task: Task }) {
 
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <Calendar className="h-4 w-4" />
-          {task.due}
+          {task.dueDate ? format(new Date(task.dueDate), "PP") : "No due date"}
         </div>
 
         <div className="flex -space-x-2">
@@ -99,18 +110,16 @@ function TaskRow({ task }: { task: Task }) {
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
         </div>
+
+        <div>
+          <UpdateTaskModal task={task}/>
+        </div>
       </div>
     </div>
   );
 }
 
-/* ---------------- Priority Badge ---------------- */
-
-function PriorityBadge({
-  priority,
-}: {
-  priority: "high" | "medium" | "low";
-}) {
+function PriorityBadge({ priority }: { priority: "high" | "medium" | "low" }) {
   const styles = {
     high: "bg-red-100 text-red-600",
     medium: "bg-yellow-100 text-yellow-700",
@@ -118,10 +127,13 @@ function PriorityBadge({
   };
 
   return (
-    <Badge variant="secondary" className={styles[priority]}>
-      {priority === "high"
-        ? "High"
-        : priority.charAt(0).toUpperCase() + priority.slice(1)}
+    <Badge
+      variant="secondary"
+      className={
+        styles[priority.toLocaleLowerCase() as "high" | "medium" | "low"]
+      }
+    >
+      {priority.charAt(0).toUpperCase() + priority.slice(1)}
     </Badge>
   );
 }

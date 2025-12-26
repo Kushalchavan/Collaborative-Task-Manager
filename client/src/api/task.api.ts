@@ -2,7 +2,7 @@ import { API } from "./axios";
 
 export type CreateTaskInput = {
   title: string;
-  description: string;
+  description?: string;
   status: "todo" | "in-progress" | "done";
   priority: "low" | "medium" | "high";
   dueDate?: string;
