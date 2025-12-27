@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,7 @@ import { updateTaskSchema, type UpdateTaskInput } from "@/schemas/task.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUpdateTask } from "@/hooks/useTask";
 import DeleteTaskModal from "./DeleteTaskModal";
+import { Spinner } from "@/components/ui/spinner";
 
 type UpdateTaskModalProps = {
   task: {
@@ -44,9 +45,6 @@ type UpdateTaskModalProps = {
 
 export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const [date, setDate] = useState<Date | undefined>(
-    task.dueDate ? new Date(task.dueDate) : undefined
-  );
   const { register, handleSubmit, control, reset } = useForm<UpdateTaskInput>({
     resolver: zodResolver(updateTaskSchema),
     defaultValues: {
@@ -58,18 +56,30 @@ export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
   });
   const { mutate: updateTask, isPending } = useUpdateTask();
 
+  // syncing values only when modal is open
+  useEffect(() => {
+    if (open) {
+      reset({
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        dueDate: task.dueDate,
+      });
+    }
+  }, [open, task, reset]);
+
   const onSubmit = (data: UpdateTaskInput) => {
     updateTask(
       {
         id: task.id,
         data: {
           ...data,
-          dueDate: date?.toISOString(),
         },
       },
       {
         onSuccess: () => {
-          reset();
+          setOpen(false);
         },
       }
     );
@@ -154,30 +164,39 @@ export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
             </Select>
 
             {/* Due date */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date && !isNaN(date.getTime())
-                    ? format(date, "PP")
-                    : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <Controller
+              name="dueDate"
+              control={control}
+              render={({ field }) => {
+                const date = field.value ? new Date(field.value) : undefined;
+                return (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="justify-start text-left font-normal"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? format(date, "PP") : "Select date"}
+                      </Button>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="p-0">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={(d) =>
+                          field.onChange(d ? d.toISOString() : undefined)
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                );
+              }}
+            />
 
             {/* Priority */}
-
             <Controller
               name="priority"
               control={control}
@@ -212,7 +231,7 @@ export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
               </Button>
 
               <Button className="w-28" type="submit" disabled={isPending}>
-                Save Changes
+                {isPending ? <Spinner className="size-4" /> : "Save Changes"}
               </Button>
             </div>
           </div>

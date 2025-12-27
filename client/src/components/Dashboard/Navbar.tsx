@@ -8,6 +8,13 @@ import {
 import { useTheme } from "../theme-provider";
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useLogout } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard" },
@@ -21,6 +28,7 @@ export default function DashboardNavbar() {
   const { startTransition } = useThemeTransition();
   const location = useLocation();
   const navigate = useNavigate();
+  const { mutate: logoutUser, isPending } = useLogout();
 
   const handleThemeToggle = useCallback(() => {
     startTransition(() => {
@@ -28,8 +36,15 @@ export default function DashboardNavbar() {
     });
   }, [theme, setTheme, startTransition]);
 
-  return (
+  const handleLogout = () => {
+    logoutUser(undefined, {
+      onSuccess: () => {
+        navigate("/");
+      },
+    });
+  };
 
+  return (
     <header className="h-16 border-b bg-background px-6 flex items-center justify-between fixed left-64 right-0">
       <div className="flex items-center gap-6">
         {/* Left */}
@@ -37,15 +52,17 @@ export default function DashboardNavbar() {
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
 
-            return <Button
-              key={item.label}
-              variant={isActive ? "secondary" : "ghost"}
-              size="sm"
-              className="text-sm"
-              onClick={() => navigate(item.path)}
-            >
-              {item.label}
-            </Button>
+            return (
+              <Button
+                key={item.label}
+                variant={isActive ? "secondary" : "ghost"}
+                size="sm"
+                className="text-sm"
+                onClick={() => navigate(item.path)}
+              >
+                {item.label}
+              </Button>
+            );
           })}
         </nav>
       </div>
@@ -62,10 +79,25 @@ export default function DashboardNavbar() {
           <Bell className="h-5 w-5" />
         </Button>
 
-        <Avatar className="h-8 w-8">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>AC</AvatarFallback>
-        </Avatar>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>AC</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              disabled={isPending}
+              className="text-red-500 focus:text-red-500"
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

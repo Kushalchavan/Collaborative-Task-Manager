@@ -5,7 +5,7 @@ import { Calendar } from "lucide-react";
 import { useGetTask } from "@/hooks/useTask";
 import { format } from "date-fns";
 import UpdateTaskModal from "./modals/UpdateTaskModal";
-
+import { useState } from "react";
 
 type Task = {
   id: string;
@@ -16,45 +16,6 @@ type Task = {
   dueDate?: string;
   project?: string;
 };
-
-// const tasks: Task[] = [
-//   {
-//     id: "1",
-//     title: "Update landing page copy for Q4 campaign",
-//     project: "Website Redesign",
-//     priority: "high",
-//     due: "Today",
-//     active: true,
-//   },
-//   {
-//     id: "2",
-//     title: "Design new authentication flow",
-//     project: "Website Redesign",
-//     priority: "medium",
-//     due: "Tomorrow",
-//   },
-//   {
-//     id: "3",
-//     title: "Fix navigation bug on mobile",
-//     project: "Mobile App",
-//     priority: "high",
-//     due: "Overdue",
-//   },
-//   {
-//     id: "4",
-//     title: "Prepare monthly investor report",
-//     project: "Internal Tools",
-//     priority: "medium",
-//     due: "Nov 24",
-//   },
-//   {
-//     id: "5",
-//     title: "Review competitor analysis",
-//     project: "Q4 Marketing",
-//     priority: "low",
-//     due: "Nov 28",
-//   },
-// ];
 
 export default function TaskList() {
   const { data } = useGetTask();
@@ -77,16 +38,28 @@ export default function TaskList() {
 }
 
 function TaskRow({ task }: { task: Task }) {
+  const [completed, setCompleted] = useState<boolean>(false);
   return (
     <div
       className={`flex items-center justify-between px-4 py-3 border-b last:border-none transition`}
     >
       {/* Left */}
       <div className="flex items-start gap-3">
-        <Checkbox className="mt-1" />
+        <Checkbox
+          className="mt-1"
+          checked={completed}
+          onCheckedChange={(checked) => setCompleted(checked === true)}
+        />
 
         <div>
-          <p className="text-sm font-medium">{task.title}</p>
+          <p
+            className={`text-sm font-medium ${
+              completed ? "line-through text-muted-foreground" : ""
+            }`}
+          >
+            {task.title}
+          </p>
+
           <p className="text-xs text-muted-foreground">{task.project}</p>
         </div>
       </div>
@@ -112,7 +85,7 @@ function TaskRow({ task }: { task: Task }) {
         </div>
 
         <div>
-          <UpdateTaskModal task={task}/>
+          <UpdateTaskModal task={task} />
         </div>
       </div>
     </div>

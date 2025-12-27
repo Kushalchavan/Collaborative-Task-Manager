@@ -55,13 +55,14 @@ export default function CreateTaskModal() {
         onSuccess: () => {
           reset();
           setDate(undefined);
+          setOpen(false);
         },
       }
     );
   };
 
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
+    <Dialog onOpenChange={(v) => !isPending && setOpen(v)} open={open}>
       <DialogTrigger asChild>
         <Button>
           <Plus /> Create Task
@@ -180,9 +181,14 @@ export default function CreateTaskModal() {
             />
           </div>
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="ghost" onClick={() => setOpen(false)}>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
+
             <Button className="w-28" type="submit" disabled={isPending}>
               {isPending ? <Spinner className="size-4" /> : "Create Task"}
             </Button>
