@@ -6,7 +6,6 @@ import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import UpdateTaskModal from "../Dashboard/modals/UpdateTaskModal";
 
-// ---------- Types ----------
 export type Task = {
   id: string;
   title: string;
@@ -22,12 +21,12 @@ type TaskListProps = {
   loading?: boolean;
 };
 
-// ---------- Task List ----------
+// Task List with loading spinner
 export default function MyTasksList({ tasks, loading }: TaskListProps) {
   if (loading) {
     return (
-      <div className="p-4 flex justity-center items-center">
-        <Spinner className="size-4" />
+      <div className="p-4 w-full h-full flex justify-center items-center">
+        <Spinner className="size-5" />
       </div>
     );
   }
@@ -49,7 +48,7 @@ export default function MyTasksList({ tasks, loading }: TaskListProps) {
   );
 }
 
-// ---------- Task Row ----------
+// Task row
 function TaskRow({ task }: { task: Task }) {
   const [completed, setCompleted] = useState(task.status === "done");
 
@@ -93,7 +92,6 @@ function TaskRow({ task }: { task: Task }) {
   );
 }
 
-// ---------- Priority Badge ----------
 function PriorityBadge({ priority }: { priority: "high" | "medium" | "low" }) {
   const styles = {
     high: "bg-red-100 text-red-600",
@@ -102,8 +100,13 @@ function PriorityBadge({ priority }: { priority: "high" | "medium" | "low" }) {
   };
 
   return (
-    <Badge variant="secondary" className={styles[priority]}>
-      {priority.charAt(0).toUpperCase() + priority.slice(1)}
+    <Badge
+      variant="secondary"
+      className={
+        styles[priority.toLocaleLowerCase() as "high" | "medium" | "low"]
+      }
+    >
+      {priority}
     </Badge>
   );
 }

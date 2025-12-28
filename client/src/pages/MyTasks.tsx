@@ -22,29 +22,31 @@ type SortOrder = "dueDate-asc" | "dueDate-desc";
 
 const MyTasks = () => {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<StatusFilter>("all");
-  const [priority, setPriority] = useState<PriorityFilter>("all");
+  const [status, setStatus] = useState<StatusFilter | undefined>(undefined);
+  const [priority, setPriority] = useState<PriorityFilter | undefined>(
+    undefined
+  );
   const [sort, setSort] = useState<SortOrder>("dueDate-asc");
   const { data, isLoading } = useGetTask();
   const tasks = data?.data ?? [];
 
   const filteredTask = useMemo(() => {
     let result = [...tasks];
-
+    
     // Search filtering
     if (search) {
       result = result.filter((task) =>
-        task.filter.toLowerCase().includes(search.toLowerCase())
+        task.title.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     // Status Filtering
-    if (status !== "all") {
+    if (status && status !== "all") {
       result = result.filter((task) => task.status === status);
     }
 
     // Priority filter
-    if (priority !== "all") {
+    if (priority && priority !== "all") {
       result = result.filter((task) => task.priority === priority);
     }
 
@@ -63,7 +65,7 @@ const MyTasks = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex gap-6">
+      <div className="w-full flex gap-4">
         {/* Left */}
         <div className="flex-1 space-y-6">
           <div className="flex items-center justify-between">
@@ -110,7 +112,6 @@ const MyTasks = () => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="todo">Todo</SelectItem>
                   <SelectItem value="in-progress">In Progress</SelectItem>
                   <SelectItem value="done">Done</SelectItem>

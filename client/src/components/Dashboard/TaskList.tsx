@@ -105,7 +105,7 @@ function PriorityBadge({ priority }: { priority: "high" | "medium" | "low" }) {
         styles[priority.toLocaleLowerCase() as "high" | "medium" | "low"]
       }
     >
-      {priority.charAt(0).toUpperCase() + priority.slice(1)}
+      {priority}
     </Badge>
   );
 }

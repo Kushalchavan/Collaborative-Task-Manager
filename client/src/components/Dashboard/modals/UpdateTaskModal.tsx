@@ -114,7 +114,10 @@ export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
               name="status"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value ?? undefined}
+                  onValueChange={field.onChange}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -201,7 +204,10 @@ export default function UpdateTaskModal({ task }: UpdateTaskModalProps) {
               name="priority"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value ?? undefined}
+                  onValueChange={field.onChange}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Priority" />
                   </SelectTrigger>
