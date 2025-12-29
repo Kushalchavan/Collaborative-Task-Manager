@@ -40,7 +40,7 @@ export const updateTask = asyncHandler(async (req: Request, res: Response) => {
 
 export const deleteTask = asyncHandler(async (req: Request, res: Response) => {
   await deleteTaskService(req.params.id, req.user.id);
-  return res.status(204).json({ message: "Task Deleted successfully" }).send();
+  return res.status(204).json({ message: "Task Deleted successfully" });
 });
 
 export const getMyTasks = asyncHandler(async (req: Request, res: Response) => {

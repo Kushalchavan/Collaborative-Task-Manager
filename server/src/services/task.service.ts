@@ -1,4 +1,5 @@
 import { Prisma } from "../../generated/prisma/client";
+import { getIO } from "../config/socket";
 import {
   insertTask,
   findTaskByIdFromDb,
@@ -19,7 +20,7 @@ export const createTaskService = async (
   },
   creatorId: string
 ) => {
-  return insertTask({
+  const task = await insertTask({
     title: data.title,
     description: data.description,
     status: data.status,
@@ -34,6 +35,10 @@ export const createTaskService = async (
       },
     }),
   });
+
+  const io = getIO(); // real time event
+  io.emit("task:creatd", task);
+  return task;
 };
 
 export const updateTaskService = async (
@@ -50,7 +55,11 @@ export const updateTaskService = async (
     throw new AppError("Only creator can update task", 401);
   }
 
-  return updateTaskById(taskId, data);
+  const updatedTask = updateTaskById(taskId, data);
+
+  const io = getIO();
+  io.emit("task:updated", updatedTask);
+  return updatedTask;
 };
 
 export const deleteTaskService = async (taskId: string, userId: string) => {
@@ -63,7 +72,10 @@ export const deleteTaskService = async (taskId: string, userId: string) => {
     throw new AppError("Only creator can delete task", 401);
   }
 
-  return deleteTaskById(taskId);
+  await deleteTaskById(taskId);
+
+  const io = getIO();
+  io.emit("task:deleted", taskId);
 };
 
 export const getTaskByIdService = async (taskId: string, userId: string) => {
