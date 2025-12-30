@@ -6,6 +6,7 @@ export type CreateTaskInput = {
   status: "todo" | "in-progress" | "done";
   priority: "low" | "medium" | "high";
   dueDate?: string;
+  assignedToId?: string;
 };
 
 export type UpdateTaskInput = Partial<CreateTaskInput>;

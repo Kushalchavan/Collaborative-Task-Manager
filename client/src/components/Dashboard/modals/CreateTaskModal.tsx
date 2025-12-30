@@ -30,6 +30,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema, type CreateTaskInput } from "@/schemas/task.schema";
 import { useCreateTask } from "@/hooks/useTask";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function CreateTaskModal() {
   const [date, setDate] = useState<Date>();
@@ -44,12 +45,15 @@ export default function CreateTaskModal() {
       priority: "medium",
     },
   });
+  const { data } = useUsers();
+  const users = data?.data || [];
 
   const onSubmit = (data: CreateTaskInput) => {
     mutate(
       {
         ...data,
         dueDate: date?.toISOString(),
+        
       },
       {
         onSuccess: () => {
@@ -77,7 +81,7 @@ export default function CreateTaskModal() {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Project + Status */}
-          <div className="grid grid-cols-2 gap-2 ">
+          <div className="flex gap-3 ">
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Project" />
@@ -100,6 +104,25 @@ export default function CreateTaskModal() {
                     <SelectItem value="todo">Todo</SelectItem>
                     <SelectItem value="in-progress">In Progress</SelectItem>
                     <SelectItem value="done">Done</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+
+            <Controller
+              name="assignedToId"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Assign to user" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users.map((user) => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.name} ({user.email})
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}

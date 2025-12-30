@@ -14,7 +14,7 @@ export const createTaskSchema = z.object({
     return "HIGH";
   }),
   dueDate: z.coerce.date().optional(),
-  assignedToId: z.string().uuid().optional(),
+  assignedToId: z.string().optional(),
 });
 
 export const updateTaskSchema = z.object({
@@ -31,5 +31,5 @@ export const updateTaskSchema = z.object({
     return "HIGH";
   }),
   dueDate: z.coerce.date().optional(),
-  assignedToId: z.string().uuid().optional(),
+  assignedToId: z.string().optional(),
 });

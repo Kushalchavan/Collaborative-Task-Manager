@@ -10,6 +10,7 @@ export const createTaskSchema = z.object({
   status: taskSchemaEnum,
   priority: taskPriorityEnum,
   dueDate: z.string().optional(),
+  assignedToId : z.string().optional(),
 });
 
 export const updateTaskSchema = createTaskSchema.partial();
