@@ -1,4 +1,5 @@
 import { Prisma } from "../../generated/prisma/client";
+import { prisma } from "../config/prisma";
 import { getIO } from "../config/socket";
 import {
   insertTask,
@@ -8,6 +9,7 @@ import {
   deleteTaskById,
 } from "../repositories/task.repository";
 import { AppError } from "../utils/AppError";
+import { sendTaskAssignmentEmail } from "./email.service";
 
 export const createTaskService = async (
   data: {
@@ -38,6 +40,31 @@ export const createTaskService = async (
 
   const io = getIO(); // real time event
   io.emit("task:created", task);
+
+  // email notification
+  if (data.assignedToId) {
+    try {
+      const assignedUser = await prisma.user.findUnique({
+        where: { id: data.assignedToId },
+        select: { email: true, name: true },
+      });
+
+      const creator = await prisma.user.findUnique({
+        where: { id: creatorId },
+        select: { name: true },
+      });
+
+      if (assignedUser && creator) {
+        await sendTaskAssignmentEmail({
+          to: assignedUser.email,
+          taskTitle: task.title,
+          assignedBy: creator.name,
+        });
+      }
+    } catch (error) {
+      console.error("Email sending failed: ", error);
+    }
+  }
   return task;
 };
 
