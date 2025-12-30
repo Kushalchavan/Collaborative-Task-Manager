@@ -32,7 +32,7 @@ const MyTasks = () => {
 
   const filteredTask = useMemo(() => {
     let result = [...tasks];
-    
+
     // Search filtering
     if (search) {
       result = result.filter((task) =>

@@ -23,6 +23,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     httpOnly: true,
     sameSite: "lax",
     secure: false,
+    maxAge: 7 * 24 * 60 * 60 * 1000
   });
   res.status(200).json({ message: "User LoggedIn successfully" });
 });

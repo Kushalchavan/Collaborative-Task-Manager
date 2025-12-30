@@ -37,7 +37,7 @@ export const createTaskService = async (
   });
 
   const io = getIO(); // real time event
-  io.emit("task:creatd", task);
+  io.emit("task:created", task);
   return task;
 };
 
@@ -55,7 +55,7 @@ export const updateTaskService = async (
     throw new AppError("Only creator can update task", 401);
   }
 
-  const updatedTask = updateTaskById(taskId, data);
+  const updatedTask = await updateTaskById(taskId, data);
 
   const io = getIO();
   io.emit("task:updated", updatedTask);
