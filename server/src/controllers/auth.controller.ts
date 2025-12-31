@@ -9,8 +9,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    sameSite: "none",
+    secure: true,
   });
   res.status(201).json({ message: "User Registered successfully" });
 });
@@ -21,9 +21,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
-    maxAge: 7 * 24 * 60 * 60 * 1000
+    sameSite: "none",
+    secure: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   res.status(200).json({ message: "User LoggedIn successfully" });
 });
@@ -37,7 +37,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 export const logout = asyncHandler(async (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     secure: false,
   });
   res.status(200).json({ message: "User logged out successfully" });

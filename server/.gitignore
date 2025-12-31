@@ -1,4 +1,12 @@
+# Node modules
 node_modules/
+
+# Envirnment variables   
 .env*
 
+# Build output
+dist/
+
+# Prisma generated client
 /generated/prisma
+/src/generated/prisma

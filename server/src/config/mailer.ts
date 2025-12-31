@@ -9,6 +9,6 @@ export const mailer = nodemailer.createTransport({
     pass: process.env.SMTP_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // for dev
+    rejectUnauthorized: true, // for dev false
   }
 });
