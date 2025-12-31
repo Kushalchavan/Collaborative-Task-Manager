@@ -7,12 +7,8 @@ export const useSocketTasks = () => {
 
   useEffect(() => {
     const onTaskChange = () => {
-      console.log("socket event ->  invalidating tasks")
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    };  
-    socket.on("debug:connected", (id) => {
-      console.log("🟢 connected to socket:", id);
-    })
+    };
 
     socket.on("task:created", onTaskChange);
     socket.on("task:updated", onTaskChange);

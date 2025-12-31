@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import { ThemeProvider } from "./components/theme-provider";
 import MyTasks from "./pages/MyTasks";
 import { useSocketTasks } from "./hooks/useSocketTasks";
+import { Toaster } from "./components/ui/sonner";
 
 const App = () => {
   useSocketTasks();
@@ -36,6 +37,7 @@ const App = () => {
           />
         </Routes>
       </BrowserRouter>
+      <Toaster richColors/>
     </ThemeProvider>
   );
 };
