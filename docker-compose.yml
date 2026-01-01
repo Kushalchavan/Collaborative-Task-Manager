@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: task-manager-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: task-manager-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/task_manager
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: task-manager-frontend
+    restart: always
+    ports:
+      - "5173:4173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
