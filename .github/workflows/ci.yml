@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/task_manager
+
     services:
       postgres:
         image: postgres:16
@@ -29,7 +32,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Backend 
+      # Backend
       - name: Setup Node.js (Backend)
         uses: actions/setup-node@v4
         with:
@@ -39,17 +42,11 @@ jobs:
         working-directory: server
         run: npm install
 
-      - name: Generate Prisma client
-        working-directory: server
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/task_manager
-        run: npx prisma generate
-
       - name: Build backend
         working-directory: server
         run: npm run build
 
-      # Frontend 
+      # Frontend
       - name: Install frontend dependencies
         working-directory: client
         run: npm install
@@ -58,7 +55,7 @@ jobs:
         working-directory: client
         run: npm run build
 
-      # Docker 
+      # Docker
       - name: Build backend Docker image
         run: docker build -t task-manager-backend ./server
 
