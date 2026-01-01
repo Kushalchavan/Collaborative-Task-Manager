@@ -9,4 +9,4 @@ dist/
 
 # Prisma generated client
 /generated/prisma
-/src/generated/prisma
+/src/generated/prisma 

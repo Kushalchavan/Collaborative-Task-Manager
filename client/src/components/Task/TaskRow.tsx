@@ -1,11 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
+import type { Task } from "./MyTasksList";
 
-const TaskRow = ({ task }) => {
+const TaskRow = ({ task }: { task: Task }) => {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b last:border-none hover:bg-muted/40">
-      <div className="flex items-start gap-3">  
+      <div className="flex items-start gap-3">
         <Checkbox className="mt-1" />
 
         <div>
@@ -21,16 +22,16 @@ const TaskRow = ({ task }) => {
 
         <div className="flex items-center gap-1 text-muted-foreground">
           <Calendar className="h-4 w-4" />
-          {task.due}
+          {task.dueDate}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default TaskRow;
 
-function PriorityBadge({ value }: { value: string }) {
+function PriorityBadge({ value }: { value: Task["priority"] }) {
   const map = {
     high: "bg-red-100 text-red-600",
     medium: "bg-yellow-100 text-yellow-700",
@@ -43,5 +44,3 @@ function PriorityBadge({ value }: { value: string }) {
     </Badge>
   );
 }
-
-
