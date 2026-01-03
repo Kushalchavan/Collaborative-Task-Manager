@@ -6,14 +6,14 @@ let io: Server;
 export const initSocket = (server: http.Server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
-      credentials: true
+      origin: [process.env.FRONTEND_URL!, "http://localhost:5173"],
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
     console.log("🟢 Socket connected:", socket.id);
-    
+
     socket.on("disconnect", () => {
       console.log("🔴 Socket disconnected", socket.id);
     });

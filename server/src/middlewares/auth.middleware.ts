@@ -8,14 +8,14 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
   if (!token) {
-    throw new AppError("Unauthorize", 401);
+    throw new AppError("Unauthorized", 401);
   }
 
   try {
-    const decoded = verifyToken(token) as { id: string };
-    if (!decoded.id) {
+    const decoded = verifyToken(token) as { id?: string };
+    if (!decoded?.id) {
       throw new AppError("Invalid token payload", 401);
     }
 
@@ -27,6 +27,7 @@ export const authMiddleware = async (
         email: true,
       },
     });
+    
     if (!user) {
       throw new AppError("User not found", 401);
     }
