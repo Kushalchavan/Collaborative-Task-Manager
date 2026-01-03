@@ -2,9 +2,6 @@
 
 A **production-ready full-stack collaborative task management application** built with modern web technologies, real-time updates, secure authentication, and cloud deployment.
 
-🔗 **Live Demo (Frontend):**  
-🔗 **API (Backend):**   
-
 ---
 
 ## 📌 Features
@@ -158,3 +155,4 @@ VITE_API_BASE_URL=https://your-backend.onrender.com/api/v1
 - Production deployment with Docker
 - CI best practices
 - Clean, scalable code structure
+
