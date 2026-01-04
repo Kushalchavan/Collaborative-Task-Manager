@@ -54,7 +54,6 @@ A **production-ready full-stack collaborative task management application** buil
 ### DevOps / Infrastructure
 - **Docker** (frontend & backend)
 - **Render** (cloud deployment)
-- **GitHub Actions** (CI pipeline)
 
 ---
 
@@ -79,8 +78,6 @@ PostgreSQL (Neon)
 - Backend runs as a Dockerized web service
 
 - Database managed externally via Neon
-
-- CI validates builds on every push & pull request
 
 
 ## 🔐 Authentication Flow
@@ -109,7 +106,6 @@ PostgreSQL (Neon)
 
 ## 🔄 CI Pipeline (GitHub Actions)
 - Runs on every push and pull_request.
-- CI Steps
 - Install dependencies
 - Generate Prisma Client
 - Build backend & frontend
@@ -153,6 +149,6 @@ VITE_API_BASE_URL=https://your-backend.onrender.com/api/v1
 - Realtime systems using WebSockets
 - ORM-based SQL database design
 - Production deployment with Docker
-- CI best practices
 - Clean, scalable code structure
+
 
